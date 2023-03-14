@@ -44,13 +44,51 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: astronauts; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.astronauts (
+    astronauts_id integer NOT NULL,
+    planet_id integer,
+    name character varying(30) NOT NULL
+);
+
+
+ALTER TABLE public.astronauts OWNER TO freecodecamp;
+
+--
+-- Name: astronauts_astronaut_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.astronauts_astronaut_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.astronauts_astronaut_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: astronauts_astronaut_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.astronauts_astronaut_id_seq OWNED BY public.astronauts.astronauts_id;
+
+
+--
 -- Name: galaxy; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
 CREATE TABLE public.galaxy (
     galaxy_id integer NOT NULL,
     name character varying(30) NOT NULL,
-    age_in_millions_of_years numeric(6,1)
+    age_in_millions_of_years numeric(6,1),
+    distance_from_earth_million_ly numeric(4,1),
+    size_in_thou_ly numeric(5,1),
+    constellation character varying(30)
 );
 
 
@@ -192,6 +230,13 @@ ALTER SEQUENCE public.star_star_id_seq OWNED BY public.star.star_id;
 
 
 --
+-- Name: astronauts astronauts_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.astronauts ALTER COLUMN astronauts_id SET DEFAULT nextval('public.astronauts_astronaut_id_seq'::regclass);
+
+
+--
 -- Name: galaxy galaxy_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
@@ -220,15 +265,24 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 
 
 --
+-- Data for Name: astronauts; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+INSERT INTO public.astronauts VALUES (1, 2, 'Neil Armstrong');
+INSERT INTO public.astronauts VALUES (2, 2, 'Buzz Aldrin');
+INSERT INTO public.astronauts VALUES (3, 2, 'Michael Collins');
+
+
+--
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.galaxy VALUES (1, 'Milky Way', 13000.0);
-INSERT INTO public.galaxy VALUES (2, 'Barnards Galaxy', 4000.0);
-INSERT INTO public.galaxy VALUES (3, 'Andromeda', 10000.0);
-INSERT INTO public.galaxy VALUES (4, 'Bodes Galaxy', 5000.0);
-INSERT INTO public.galaxy VALUES (5, 'Fireworks Galaxy', 7000.0);
-INSERT INTO public.galaxy VALUES (6, 'Nubecula Major', 9000.0);
+INSERT INTO public.galaxy VALUES (1, 'Milky Way', 13000.0, NULL, NULL, NULL);
+INSERT INTO public.galaxy VALUES (2, 'Barnards Galaxy', 4000.0, NULL, NULL, NULL);
+INSERT INTO public.galaxy VALUES (3, 'Andromeda', 10000.0, NULL, NULL, NULL);
+INSERT INTO public.galaxy VALUES (4, 'Bodes Galaxy', 5000.0, NULL, NULL, NULL);
+INSERT INTO public.galaxy VALUES (5, 'Fireworks Galaxy', 7000.0, NULL, NULL, NULL);
+INSERT INTO public.galaxy VALUES (6, 'Nubecula Major', 9000.0, NULL, NULL, NULL);
 
 
 --
@@ -247,6 +301,17 @@ INSERT INTO public.moon VALUES (9, 'Rhea', 1000.0, false, 7);
 INSERT INTO public.moon VALUES (10, 'Iapetus', 1000.0, false, 7);
 INSERT INTO public.moon VALUES (11, 'Enceladus', 1000.0, false, 7);
 INSERT INTO public.moon VALUES (12, 'Tethys', 1000.0, false, 7);
+INSERT INTO public.moon VALUES (13, 'Dione', 1000.0, false, 7);
+INSERT INTO public.moon VALUES (14, 'Mimas', 1000.0, false, 7);
+INSERT INTO public.moon VALUES (15, 'Phoebe', 1000.0, false, 7);
+INSERT INTO public.moon VALUES (16, 'Pandora', 1000.0, false, 7);
+INSERT INTO public.moon VALUES (17, 'Triton', 1000.0, false, 8);
+INSERT INTO public.moon VALUES (18, 'Proteus', 1000.0, false, 8);
+INSERT INTO public.moon VALUES (19, 'Charon', 1000.0, false, 10);
+INSERT INTO public.moon VALUES (20, 'Titania', 1000.0, false, 9);
+INSERT INTO public.moon VALUES (21, 'Oberon', 1000.0, false, 9);
+INSERT INTO public.moon VALUES (22, 'Umbriel', 1000.0, false, 9);
+INSERT INTO public.moon VALUES (23, 'Ariel', 1000.0, false, 9);
 
 
 --
@@ -281,6 +346,13 @@ INSERT INTO public.star VALUES (40, 'Teegardens Star', 700.0, 0, 2, 1);
 
 
 --
+-- Name: astronauts_astronaut_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.astronauts_astronaut_id_seq', 3, true);
+
+
+--
 -- Name: galaxy_galaxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
@@ -291,7 +363,7 @@ SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 6, true);
 -- Name: moon_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.moon_moon_id_seq', 12, true);
+SELECT pg_catalog.setval('public.moon_moon_id_seq', 23, true);
 
 
 --
@@ -306,6 +378,22 @@ SELECT pg_catalog.setval('public.planet_planet_id_seq', 13, true);
 --
 
 SELECT pg_catalog.setval('public.star_star_id_seq', 40, true);
+
+
+--
+-- Name: astronauts astronauts_astronaut_id_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.astronauts
+    ADD CONSTRAINT astronauts_astronaut_id_key UNIQUE (astronauts_id);
+
+
+--
+-- Name: astronauts astronauts_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.astronauts
+    ADD CONSTRAINT astronauts_pkey PRIMARY KEY (astronauts_id);
 
 
 --
@@ -370,6 +458,14 @@ ALTER TABLE ONLY public.star
 
 ALTER TABLE ONLY public.star
     ADD CONSTRAINT star_star_id_key UNIQUE (star_id);
+
+
+--
+-- Name: astronauts astronauts_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.astronauts
+    ADD CONSTRAINT astronauts_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
 
 
 --
